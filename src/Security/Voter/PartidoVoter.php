@@ -16,13 +16,15 @@ class PartidoVoter extends Voter
         $this->security = $security;
     }
     public const VIEW = 'PARTIDO_VIEW';
+    public const EDIT = 'PARTIDO_EDIT';
 
     protected function supports(string $attribute, $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
         if (!in_array($attribute, [
-            self::VIEW
+            self::VIEW,
+            self::EDIT
         ], true)){
             return false;
         }
@@ -44,6 +46,8 @@ class PartidoVoter extends Voter
             case self::VIEW:
                 return ($this->security->isGranted('ROLE_INSCRIPTOR') || ($subject->getJuez() === $user || $subject->getJugador1() === $user ||$subject->getJugador2() === $user));
                 break;
+            case self::EDIT:
+                return $subject->getJuez() === $user;
         }
 
         return false;

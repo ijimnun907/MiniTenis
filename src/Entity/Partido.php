@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -25,36 +26,47 @@ class Partido
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[ApiProperty(writable: false)]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ApiProperty(writable: false)]
     private ?\DateTimeImmutable $fecha = null;
 
     #[ORM\Column]
+    #[ApiProperty(security: 'is_granted("PARTIDO_EDIT", object)')]
     private ?int $puntuacion1 = null;
 
     #[ORM\Column]
+    #[ApiProperty(security: 'is_granted("PARTIDO_EDIT", object)')]
     private ?int $puntuacion2 = null;
 
     #[ORM\Column]
+    #[ApiProperty(security: 'is_granted("PARTIDO_EDIT", object)')]
     private ?int $numJuegos1 = null;
 
     #[ORM\Column]
+    #[ApiProperty(security: 'is_granted("PARTIDO_EDIT", object)')]
     private ?int $numJuegos2 = null;
 
     #[ORM\Column]
+    #[ApiProperty(security: 'is_granted("PARTIDO_EDIT", object)')]
     private ?int $servicioActual = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[ApiProperty(security: 'is_granted("PARTIDO_EDIT", object)')]
     private ?string $notas = null;
 
     #[ORM\ManyToOne]
+    #[ApiProperty(writable: false)]
     private ?Socio $jugador1 = null;
 
     #[ORM\ManyToOne]
+    #[ApiProperty(writable: false)]
     private ?Socio $jugador2 = null;
 
     #[ORM\ManyToOne(inversedBy: 'partidos')]
+    #[ApiProperty(writable: false)]
     private ?Socio $juez = null;
 
     public function getId(): ?int
