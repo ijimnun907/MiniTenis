@@ -7,10 +7,15 @@ use App\Repository\SocioRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @method string getUserIdentifier()
+ */
 #[ORM\Entity(repositoryClass: SocioRepository::class)]
 #[ApiResource]
-class Socio
+class Socio implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -148,5 +153,43 @@ class Socio
         }
 
         return $this;
+    }
+
+    public function getRoles()
+    {
+        $roles = [];
+        $roles[] = 'ROLE_USER';
+        if ($this->inscriptor){
+            $roles[] = 'ROLE_INSCRIPTOR';
+        }
+        if ($this->administrador){
+            $roles[] = 'ROLE_ADMINISTRADOR';
+        }
+        return $roles;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->clave;
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUsername()
+    {
+        return $this->usuario;
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        // TODO: Implement @method string getUserIdentifier()
     }
 }
