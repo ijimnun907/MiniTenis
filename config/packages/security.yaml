@@ -8,14 +8,27 @@ security:
         ROLE_ADMINISTRADOR: ['ROLE_INSCRIPTOR']
 
     providers:
-        users_in_memory: { memory: null }
+        proveedor_usuarios:
+            entity:
+                class: App\Entity\Socio
+                property: usuario
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: proveedor_usuarios
+            jwt: ~
         main:
             lazy: true
-            provider: users_in_memory
+            json_login:
+                check_path: api_login
+                username_path: usuario
+                password_path: clave
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
