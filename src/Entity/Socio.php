@@ -3,6 +3,12 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\SocioRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,7 +20,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @method string getUserIdentifier()
  */
 #[ORM\Entity(repositoryClass: SocioRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(security: 'is_granted("ROLE_INSCRIPTOR")'),
+        new Get(security: 'is_granted("ROLE_INSCRIPTOR")'),
+        new Delete(security: 'is_granted("ROLE_ADMINISTRADOR")'),
+        new Post(security: 'is_granted("ROLE_ADMINISTRADOR")'),
+        new Patch(security: 'is_granted("ROLE_ADMINISTRADOR")'),
+        new Put(security: 'is_granted("ROLE_ADMINISTRADOR")')
+    ]
+)]
 class Socio implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
